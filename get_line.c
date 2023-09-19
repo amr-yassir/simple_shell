@@ -65,7 +65,7 @@ void sigintHandler(__attribute__((unused))int sig_num)
  * @info: The Parameter struct
  * @buf: The Address of buffer
  * @len: The Address of len var
- *
+
  * Return: Bytes read
  */
 ssize_t input_buf(info_t *info, char **buf, size_t *len)
