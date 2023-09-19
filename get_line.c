@@ -1,5 +1,7 @@
 #include "shell.h"
 
+ssize_t read_buf(info_t *info, char *buf, size_t *i);
+
 /**
  * _getline - Gets the next line of the input from the STDIN
  * @info: Parameter struct
@@ -168,4 +170,3 @@ ssize_t read_buf(info_t *info, char *buf, size_t *i)
 		*i = r;
 	return (r);
 }
-
