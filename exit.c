@@ -1,74 +1,65 @@
 #include "shell.h"
+
 /**
- **_strchr - Locates the character in the string
- *@s: The string to be parsed
- *@c: The character to look for
- *Return: (s) Pointer to the memory area "s"
- */
+ * _strchr - detect the first occur
+ *
+ * @s: input
+ * @c: input
+ *
+ * Return: a
+*/
 char *_strchr(char *s, char c)
 {
-	do {
-		if (*s == c)
-			return (s);
-	} while (*s++ != '\0');
+	int i;
 
-	return (NULL);
-}
-
-/**
- **_strncpy - Copies string
- *@dest: The destination of a string to be copied to
- *@src: The source string
- *@n: The amount of characters to be copied
- *Return: The concatenated string
- */
-char *_strncpy(char *dest, char *src, int n)
-{
-	int i, j;
-	char *s = dest;
-
-	i = 0;
-	while (src[i] != '\0' && i < n - 1)
+	for (i = 0; s[i] >= '\0'; i++)
 	{
-		dest[i] = src[i];
-		i++;
-	}
-	if (i < n)
-	{
-		j = i;
-		while (j < n)
+		if (s[i] == c)
 		{
-			dest[j] = '\0';
-			j++;
+			return (s + i);
 		}
 	}
-	return (s);
+	return ('\0');
 }
 
 /**
- **_strncat - Concatenates 2 strings
- *@dest: The first string
- *@src: The second string
- *@n: The amount of bytes to be maximally used
- *Return: The concatenated string
- */
-char *_strncat(char *dest, char *src, int n)
+ * _strncpy - copy string
+ *
+ * @dest: input
+ * @src: input
+ * @n: input
+ *
+ * Return: @dest
+*/
+char *_strncpy(char *dest, char *src, int n)
 {
-	int i, j;
-	char *s = dest;
+	int i;
 
-	i = 0;
-	j = 0;
-	while (dest[i] != '\0')
-		i++;
-	while (src[j] != '\0' && j < n)
-	{
-		dest[i] = src[j];
-		i++;
-		j++;
-	}
-	if (j < n)
+	for (i = 0; i < n && src[i] != '\0'; i++)
+		dest[i] = src[i];
+	for ( ; i < n; i++)
 		dest[i] = '\0';
-	return (s);
+
+	return (dest);
 }
 
+/**
+ * _strncat - merge two strings
+ *
+ * @dest: input
+ * @src: input
+ * @n: input
+ *
+ * Return: @dest
+*/
+char *_strncat(char *dest, char *src, int n)
+{
+	int l = strlen(dest);
+	int i;
+
+	for (i = 0; i < n && src[i] != '\0'; i++)
+		dest[l + i] = src[i];
+	dest[l + i] = '\0';
+
+	return (dest);
+}
