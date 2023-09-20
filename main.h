@@ -42,12 +42,9 @@ char *_strcat(char *dest, char *src);
 char **tkn(char *line);
 
 void free_modified(char **arr);
-
 ssize_t _getline(char **line, size_t length, int position);
-
 void _env(void);
 void _perror(char *prog, char *cmd, int ctr);
-
 int _atoi(char *s);
 int is_positive(char *str);
 char *_atoi_rev(int n);
