@@ -3,7 +3,7 @@
 /**
  * builtin - builtin
  * @cmd: input
- * RETURN: 0
+ * Return: 0
  */
 int builtin(char *cmd)
 {
