@@ -1,88 +1,94 @@
-#include "shell.h"
+#include "main.h"
 
 /**
- * _puts - Prints an input string
- * @str: String to be printed
- *
- * Return: Nothing
+ * print_char - print a single character
+ * @c: input
+ * Return: size of output
  */
-void _puts(char *str)
+int print_char(char c)
 {
+	return (write(1, &c, 1));
+}
+
+/**
+ * print_str - prints a string
+ * @s: pointer to array of char
+ * Return: size of string
+ */
+int print_str(char *s)
+{
+	int ctr = 0;
+
+	while (*s)
+		ctr += write(1, s++, 1);
+
+	return (ctr);
+}
+
+/**
+ * str_rev - reverse string
+ * @str: input
+ * @len: input
+ */
+void str_rev(char *str, int len)
+{
+	char tmp;
+	int i = 0;
+	int end = len - 1;
+
+	while (i < end)
+	{
+		tmp = str[i];
+		str[i] = str[end];
+		str[end] = tmp;
+		i++;
+		end--;
+	}
+}
+
+/**
+ * _atoi - convert
+ * @s: input
+ * Return: num
+ */
+int _atoi(char *s)
+{
+	unsigned int num = 0;
+	int sign = 1;
+
+	do {
+		if (*s == '-')
+			sign *= -1;
+		else if (*s >= '0' && *s <= '9')
+			num = (num * 10) + (*s - '0');
+		else if (num > 0)
+			break;
+	} while (*s++);
+
+	return (num * sign);
+}
+
+/**
+ * _atoi_rev - convert
+ * @n: input
+ * Return: string
+ */
+char *_atoi_rev(int n)
+{
+	char buff[20];
 	int i = 0;
 
-	if (!str)
-		return;
-	while (str[i] != '\0')
+	if (n == 0)
+		buff[i++] = '0';
+	else
 	{
-		_putchar(str[i]);
-		i++;
+		while (n > 0)
+		{
+			buff[i++] = (n % 10) + '0';
+			n /= 10;
+		}
 	}
+	buff[i] = '\0';
+	str_rev(buff, i);
+	return (_strdup(buff));
 }
-
-/**
- * _putchar - writes the character "c" to stdout
- * @c: character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
-int _putchar(char c)
-{
-	static int i;
-	static char buf[WRITE_BUF_SIZE];
-
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
-	{
-		write(1, buf, i);
-		i = 0;
-	}
-	if (c != BUF_FLUSH)
-		buf[i++] = c;
-	return (1);
-}
-
-/**
- * _strcpy - copies a string
- * @dest: The destination
- * @src: The source
- *
- * Return: Pointer to destination
- */
-char *_strcpy(char *dest, char *src)
-{
-	int i = 0;
-
-	if (dest == src || src == 0)
-		return (dest);
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = 0;
-	return (dest);
-}
-
-/**
- * _strdup - duplicates the string
- * @str: String to duplicate
- *
- * Return: The pointer to the duplicated string
- */
-char *_strdup(const char *str)
-{
-	int length = 0;
-	char *ret;
-
-	if (str == NULL)
-		return (NULL);
-	while (*str++)
-		length++;
-	ret = malloc(sizeof(char) * (length + 1));
-	if (!ret)
-		return (NULL);
-	for (length++; length--;)
-		ret[length] = *--str;
-	return (ret);
-}
-

@@ -1,87 +1,95 @@
-#include "shell.h"
-/**
- * _myenv - Prints current environment
- * @info: Structure is containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
- */
-int _myenv(info_t *info)
-{
-	print_list_str(info->env);
-	return (0);
-}
-/**
- * populate_env_list - populate env linked list
- * @info: Structure is containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
- */
-int populate_env_list(info_t *info)
-{
-	list_t *node = NULL;
-	size_t i;
+#include "main.h"
 
-	for (i = 0; environ[i]; i++)
-		add_node_end(&node, environ[i], 0);
-	info->env = node;
-	return (0);
-}
 /**
- * _myunsetenv - Remove the environment variable
- * @info: Structure is containing potential arguments. Used to maintain
- *        constant function prototype.
- * Return: Always 0
+ * _getenv - represent env
+ * @name : find env variable
+ * Return: value of env
  */
-int _myunsetenv(info_t *info)
+char *_getenv(char *name)
 {
 	int i;
 
-	if (info->argc == 1)
+	for (i = 0; environ[i]; i++)
 	{
-		_eputs("Too few arguements.\n");
-		return (1);
-	}
-	for (i = 1; i <= info->argc; i++)
-		_unsetenv(info, info->argv[i]);
+		char *env_pair = _strdup(environ[i]);
+		char *key = strtok(env_pair, "=");
 
-	return (0);
-}
-/**
- * _mysetenv - Initialize a new environment variable,
- *             or modify already existed one
- * @info: Structur is containing potential arguments. Used to maintain
- *        constant function prototype.
- *  Return: Always 0
- */
-int _mysetenv(info_t *info)
-{
-	if (info->argc != 3)
-	{
-		_eputs("Incorrect number of arguements\n");
-		return (1);
-	}
-	if (_setenv(info, info->argv[1], info->argv[2]))
-		return (0);
-	return (1);
-}
-/**
- * _getenv - Get the value of an env. variable
- * @info: Structure is containing potential arguments. Used to maintain
- * @name: env var name
- *
- * Return: the value
- */
-char *_getenv(info_t *info, const char *name)
-{
-	list_t *node = info->env;
-	char *p;
+		if (_strcmp(key, name) == 0)
+		{
+			char *val = strtok(NULL, "\n");
+			char *env = _strdup(val);
 
-	while (node)
-	{
-		p = starts_with(node->str, name);
-		if (p && *p)
-			return (p);
-		node = node->next;
+			free(env_pair);
+			return (env);
+		}
+		free(env_pair);
 	}
+	return (NULL);
+}
+
+/**
+ * print_env - print env
+ * @cmd: input
+ * @sta: input
+ */
+void print_env(char **cmd, int *sta)
+{
+	int i;
+
+	for (i = 0; environ[i]; i++)
+	{
+		write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
+		write(STDOUT_FILENO, "\n", 1);
+	}
+	free_modified(cmd);
+	*sta = 0;
+}
+
+/**
+ * _getpath - takes pointer to array
+ * @command: input
+ * Return: full_path
+ */
+char *_getpath(char *command)
+{
+	struct stat st;
+	char *pth, *token;
+	int i;
+
+	for (i = 0; command[i]; i++)
+	{
+		if (command[i] == '/')
+		{
+			if (stat(command, &st) == 0)
+			{
+				return (_strdup(command));
+			}
+			return (NULL);
+		}
+	}
+
+	pth = _getenv("PATH");
+	if (!pth)
+		return (NULL);
+	token = strtok(pth, ":");
+	while (token)
+	{
+		char *fpth = malloc(strlen(token) + strlen(command) + 2);
+
+		if (fpth)
+		{
+			_strcpy(fpth, token);
+			_strcat(fpth, "/");
+			_strcat(fpth, command);
+			if (stat(fpth, &st) == 0)
+			{
+				free(pth);
+				return (fpth);
+			}
+			free(fpth);
+			token = strtok(NULL, ":");
+		}
+	}
+	free(pth);
 	return (NULL);
 }

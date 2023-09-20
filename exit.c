@@ -1,65 +1,40 @@
-#include "shell.h"
+#include "main.h"
 
 /**
- * _strchr - detect the first occur
- *
+ * exitsh - exit the shell
+ * @cmd: input
+ * @argv: input
  * @s: input
- * @c: input
- *
- * Return: a
-*/
-char *_strchr(char *s, char c)
+ * @index: input
+ */
+void exitsh(char **cmd, char **argv, int *s, int index)
 {
-	int i;
+	char *i;
+	char err[] = ": exit Illegal number: ";
+	int EXIT_VALUE = (*s);
 
-	for (i = 0; s[i] >= '\0'; i++)
+	if (cmd[1])
 	{
-		if (s[i] == c)
+		if (atoi(cmd[1]) >= 0)
 		{
-			return (s + i);
+			EXIT_VALUE = atoi(cmd[1]);
+		}
+		else
+		{
+			i = _atoi_rev(index);
+			fputs(argv[0], stderr);
+			fputs(": ", stderr);
+			fputs(i, stderr);
+			fputs(": ", stderr);
+			fputs(cmd[1], stderr);
+			fputs(err, stderr);
+			fputs("\n", stderr);
+			free(i);
+			free_modified(cmd);
+			(*s) = 2;
+			return;
 		}
 	}
-	return ('\0');
-}
-
-/**
- * _strncpy - copy string
- *
- * @dest: input
- * @src: input
- * @n: input
- *
- * Return: @dest
-*/
-char *_strncpy(char *dest, char *src, int n)
-{
-	int i;
-
-	for (i = 0; i < n && src[i] != '\0'; i++)
-		dest[i] = src[i];
-	for ( ; i < n; i++)
-		dest[i] = '\0';
-
-	return (dest);
-}
-
-/**
- * _strncat - merge two strings
- *
- * @dest: input
- * @src: input
- * @n: input
- *
- * Return: @dest
-*/
-char *_strncat(char *dest, char *src, int n)
-{
-	int l = strlen(dest);
-	int i;
-
-	for (i = 0; i < n && src[i] != '\0'; i++)
-		dest[l + i] = src[i];
-	dest[l + i] = '\0';
-
-	return (dest);
+	free_modified(cmd);
+	exit(EXIT_VALUE);
 }
