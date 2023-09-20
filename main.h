@@ -38,18 +38,19 @@ int _strcmp(char *str1, char *str2);
 char *_strdup(char *str);
 char *_strcat(char *dest, char *src);
 
+/* str1.c */
+int print_char(char c);
+int print_str(char *str);
+void str_rev(char *str, int len);
+int _atoi(char *s);
+char *_atoi_rev(int n);
+
 /* tkn.c */
 char **tkn(char *line);
 
+/* tools.c */
 void free_modified(char **arr);
-ssize_t _getline(char **line, size_t length, int position);
-void _env(void);
 void _perror(char *prog, char *cmd, int ctr);
-int _atoi(char *s);
 int is_positive(char *str);
-char *_atoi_rev(int n);
-void str_rev(char *str, int len);
-int print_str(char *str);
-int print_char(char c);
 
 #endif
